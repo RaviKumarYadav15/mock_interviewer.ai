@@ -6,6 +6,7 @@ import { setUserData } from './redux/userSlice.js'
 
 import Home from './pages/Home.jsx'
 import AuthModal from './components/AuthModal.jsx'
+import InterviewPage from './pages/InterviewPage.jsx'
 
 export const serverUrl = "http://localhost:8000"
 
@@ -49,8 +50,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home />} />
 
-        {/* PROTECTED ROUTES*/}
-        {/* <Route path='/interview' element={user ? <InterviewPage /> : <Navigate to="/" />} /> */}
+        <Route path='/interview' element={user ? <InterviewPage /> : <Navigate to="/" />} />
       </Routes>
     </>
   )
