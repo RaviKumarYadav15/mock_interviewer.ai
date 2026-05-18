@@ -1,6 +1,10 @@
 # dependencies
 node_modules/
 
+# Ignore uploaded files
+public/*
+!public/.gitkeep
+
 # production
 dist/
 build/
