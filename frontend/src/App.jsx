@@ -7,6 +7,8 @@ import { setUserData } from './redux/userSlice.js'
 import Home from './pages/Home.jsx'
 import AuthModal from './components/AuthModal.jsx'
 import InterviewPage from './pages/InterviewPage.jsx'
+import GlobalRouteListener from './components/GlobalRouteListener.jsx'
+import Navbar from './components/Navbar.jsx'
 
 export const serverUrl = "http://localhost:8000"
 
@@ -46,7 +48,9 @@ const App = () => {
 
   return (
     <>
+      <GlobalRouteListener/>
       <AuthModal />
+      <Navbar/>
       <Routes>
         <Route path='/' element={<Home />} />
 
