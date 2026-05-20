@@ -1,4 +1,3 @@
-import Navbar from '../components/Navbar.jsx'
 import Process from '../components/Process.jsx'
 import { useSelector, useDispatch } from 'react-redux'
 import { motion } from 'motion/react'
@@ -32,8 +31,6 @@ const Home = () => {
 
   return (
     <div className='min-h-screen bg-[#f3f3f3] flex flex-col overflow-x-hidden'>
-      <Navbar />
-
       <div className='flex-1 px-6 pt-20'>
         <div className='flex justify-center mb-8'>
           <div className='bg-blue-100 text-sm px-4 py-2 rounded-full flex items-center gap-2'>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setStep, setInterviewData } from '../redux/interviewSlice';
+import { setUserData } from '../redux/userSlice';
 import axios from 'axios';
 import { 
     FaUserTie, 
@@ -14,10 +15,13 @@ import {
 const Step1SetUp = () => {
     const dispatch = useDispatch();
 
+    const {userData} = useSelector((state)=> state.user);
+
     // Form State
     const [role, setRole] = useState("");
     const [experience, setExperience] = useState("");
     const [mode, setMode] = useState("Technical");
+    const [voicePreference, setVoicePreference] = useState("Random");
     
     // Resume Analysis State
     const [resumeFile, setResumeFile] = useState(null);
@@ -26,6 +30,8 @@ const Step1SetUp = () => {
     const [projects, setProjects] = useState([]);
     const [skills, setSkills] = useState([]);
     const [resumeText, setResumeText] = useState("");
+
+    const [loading,setLoading] = useState(false);
 
     const features = [
         {
@@ -69,10 +75,48 @@ const Step1SetUp = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+const handleStart = async (e) => {
         e.preventDefault();
-        dispatch(setInterviewData({ role, experience, mode, resumeFile, projects, skills, resumeText }));
-        dispatch(setStep(2));
+        if (loading) return; 
+        setLoading(true);
+        try {
+            // generate 5 questions
+            const result = await axios.post("http://localhost:8000/api/interview/generate-questions", {
+                role,
+                experience,
+                voicePreference,
+                mode,
+                resumeText,
+                projects,
+                skills
+            }, { withCredentials: true });
+
+            // Update user's credits in Redux
+            if (userData) {
+                dispatch(setUserData({ ...userData, credits: result.data.creditsLeft }));
+            }
+
+            // Save all form data also generated questions
+            dispatch(setInterviewData({ 
+                role, 
+                experience, 
+                mode, 
+                resumeText, 
+                projects, 
+                skills,
+                interviewId: result.data.interviewId,
+                questions: result.data.questions 
+            }));
+            
+            // Now move to Step 2
+            dispatch(setStep(2));
+
+        } catch (error) {
+            console.error("Failed to start interview:", error);
+            alert(error.response?.data?.message || "Something went wrong generating questions.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -128,7 +172,7 @@ const Step1SetUp = () => {
                     <h2 className="text-3xl font-bold text-gray-800 mb-8">
                         Interview SetUp
                     </h2>
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleStart} className="space-y-6">
                         
                         <div className="relative">
                             <FaUserTie className="absolute top-4 left-4 text-gray-400 text-lg" />
@@ -155,6 +199,7 @@ const Step1SetUp = () => {
                         </div>
 
                         <div className="relative">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Interview Mode</label>
                             <select 
                                 value={mode}
                                 onChange={(e) => setMode(e.target.value)}
@@ -162,6 +207,19 @@ const Step1SetUp = () => {
                             >
                                 <option value="Technical">Technical Interview</option>
                                 <option value="HR">HR Interview</option>
+                            </select>
+                        </div>
+
+                        <div className="relative">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Interviewer Voice</label>
+                            <select 
+                                value={voicePreference}
+                                onChange={(e) => setVoicePreference(e.target.value)}
+                                className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50/50 appearance-none cursor-pointer"
+                            >
+                                <option value="Random">Random</option>
+                                <option value="Male">Male Interviewer</option>
+                                <option value="Female">Female Interviewer</option>
                             </select>
                         </div>
 
@@ -191,7 +249,7 @@ const Step1SetUp = () => {
                                             e.stopPropagation();
                                             handleUploadResume();
                                         }}
-                                        disabled={analyzing}
+                                        disabled={analyzing || loading}
                                         className="mt-4 bg-gray-900 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
                                     >
                                         {analyzing ? "Analyzing..." : "Analyze Resume"}
@@ -238,10 +296,12 @@ const Step1SetUp = () => {
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.95 }}
                             type="submit"
-                            disabled={!role || !experience || analyzing}
-                            className="w-full bg-blue-600 text-white font-semibold text-lg py-4 rounded-full hover:bg-blue-700 transition duration-300 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed mt-4"
-                        >
-                            Start Interview
+                            disabled={!role || !experience || analyzing || loading}
+                            className="w-full bg-blue-600 text-white font-semibold text-lg py-4 rounded-full hover:bg-blue-700 transition duration-300 shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed mt-4 flex items-center justify-center gap-2"                        >
+                            {loading && (
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            )}
+                            {loading ? "Generating Questions..." : "Start Interview"}
                         </motion.button>
                         
                     </form>
