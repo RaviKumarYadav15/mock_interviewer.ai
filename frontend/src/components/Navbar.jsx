@@ -102,7 +102,7 @@ const Navbar = () => {
                                         <button 
                                             onClick={() => {
                                                 setShowUserPopUp(false)
-                                                navigate("/history")
+                                                navigate("/dahboard")
                                             }} 
                                             className='w-full text-left text-sm py-2 px-2 mb-1 hover:text-black text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer transition'
                                         >
