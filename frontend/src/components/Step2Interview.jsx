@@ -6,8 +6,8 @@ import { setStep, setReportData } from '../redux/interviewSlice';
 import { FaStopCircle, FaSpinner, FaVolumeUp, FaCheckCircle, FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import Timer from './Timer';
 
-import maleVideo from '../assets/videos/male-ai.mp4';
-import femaleVideo from '../assets/videos/female-ai.mp4';
+import maleVideo from '../assets/Videos/male-ai.mp4';
+import femaleVideo from '../assets/Videos/female-ai.mp4';
 
 function Step2Interview() {
     const dispatch = useDispatch();
