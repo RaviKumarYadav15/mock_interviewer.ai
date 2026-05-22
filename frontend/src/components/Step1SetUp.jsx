@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setStep, setInterviewData } from '../redux/interviewSlice';
@@ -11,6 +11,7 @@ import {
     FaMicrophoneAlt, 
     FaChartLine
 } from "react-icons/fa";
+import { serverUrl } from '../App.jsx';
 
 const Step1SetUp = () => {
     const dispatch = useDispatch();
@@ -56,7 +57,7 @@ const Step1SetUp = () => {
             const formData = new FormData();
             formData.append("resume", resumeFile); 
 
-            const result = await axios.post("http://localhost:8000/api/interview/resume", formData, {
+            const result = await axios.post(serverUrl + "/api/interview/resume", formData, {
                 withCredentials: true
             });
 
@@ -81,7 +82,7 @@ const handleStart = async (e) => {
         setLoading(true);
         try {
             // generate 5 questions
-            const result = await axios.post("http://localhost:8000/api/interview/generate-questions", {
+            const result = await axios.post(serverUrl + "/api/interview/generate-questions", {
                 role,
                 experience,
                 voicePreference,

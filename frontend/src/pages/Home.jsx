@@ -1,10 +1,10 @@
-import Process from '../components/Process.jsx'
 import { useSelector, useDispatch } from 'react-redux'
 import { motion } from 'motion/react'
 import { setAuthModalOpen } from '../redux/userSlice.js'
 import { useNavigate } from 'react-router-dom'
 import { BsRobot, BsClock } from "react-icons/bs"
 import { HiSparkles } from 'react-icons/hi'
+import Process from '../components/Process.jsx'
 import AiCapabilities from '../components/AiCapabilities.jsx'
 import Footer from '../components/Footer.jsx'
 
@@ -21,11 +21,11 @@ const Home = () => {
     }
   }
 
-  const handleHistory = () => {
+  const handleDashboard = () => {
     if (!userData) {
       dispatch(setAuthModalOpen(true))
     } else {
-      navigate('/history')
+      navigate('/dashboard')
     }
   }
 
@@ -33,7 +33,7 @@ const Home = () => {
     <div className='min-h-screen bg-[#f3f3f3] flex flex-col overflow-x-hidden'>
       <div className='flex-1 px-6 pt-20'>
         <div className='flex justify-center mb-8'>
-          <div className='bg-blue-100 text-sm px-4 py-2 rounded-full flex items-center gap-2'>
+          <div className='bg-linear-to-b from-blue-50 to-blue-500 text-sm px-4 py-2 rounded-full flex items-center gap-2'>
             <HiSparkles size={20} className='text-blue-600' />
             <span className='font-medium text-gray-700'>AI Powered Smart Interview Platform</span>
           </div>
@@ -48,7 +48,7 @@ const Home = () => {
           >
             Practice Interviews with
             <span className='relative inline-block ml-3 mt-2 md:mt-0'>
-              <span className='bg-blue-100 text-blue-600 rounded-full px-4 py-1'>
+              <span className=' bg-linear-to-br from-blue-10 to-blue-100 text-blue-600 rounded-r-4xl px-4 py-1'>
                 AI Intelligence
               </span>
             </span>
@@ -60,7 +60,7 @@ const Home = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className='text-gray-500 mt-6 max-w-2xl mx-auto text-lg'
           >
-            Role-based mock interviews with smart follow-ups, adaptive difficulty, and real-time performance evaluation.
+            Role-based mock interviews with smart follow-ups, adaptive difficulty, and real-time performance evaluation
           </motion.p>
 
           <div className='flex flex-wrap justify-center gap-4 mt-10'>
@@ -68,7 +68,7 @@ const Home = () => {
               whileHover={{opacity:0.9, scale:1.03}}
               whileTap={{opacity:1, scale:0.98}}
               onClick={handleStart}
-              className="bg-blue-600 text-white px-8 py-4 rounded-full shadow-md hover:bg-blue-700 transition flex items-center gap-2 cursor-pointer"
+              className="bg-linear-to-b from-blue-900 to-blue-500 text-white px-8 py-4 rounded-full shadow-md hover:bg-blue-700 transition flex items-center gap-2 cursor-pointer"
             >
               <BsRobot size={20} />
               Start Interview
@@ -77,11 +77,11 @@ const Home = () => {
             <motion.button
               whileHover={{opacity:0.9, scale:1.03}}
               whileTap={{opacity:1, scale:0.98}}
-              onClick={handleHistory}
-              className="bg-white border border-blue-200 text-blue-600 px-10 py-3 rounded-full hover:bg-blue-50 transition flex items-center gap-2 cursor-pointer"
+              onClick={handleDashboard}
+              className="bg-white border border-blue-200 text-blue-600 px-10 py-3 rounded-full hover:bg-linear-to-br from-blue-50 to-blue-100 transition flex items-center gap-2 cursor-pointer"
             >
               <BsClock size={18} />
-              View History
+              View Dashboard
             </motion.button>
           </div>
         </div>
