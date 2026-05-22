@@ -25,7 +25,7 @@ const Home = () => {
     if (!userData) {
       dispatch(setAuthModalOpen(true))
     } else {
-      navigate('/history')
+      navigate('/dashboard')
     }
   }
 
