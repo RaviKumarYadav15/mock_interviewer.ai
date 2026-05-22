@@ -10,7 +10,7 @@ import InterviewPage from './pages/InterviewPage.jsx'
 import GlobalRouteListener from './components/GlobalRouteListener.jsx'
 import Navbar from './components/Navbar.jsx'
 
-export const serverUrl = "https://mockinterviewer-ai.onrender.com" || "http://localhost:8000"
+export const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
 
 const App = () => {
   const dispatch = useDispatch();
