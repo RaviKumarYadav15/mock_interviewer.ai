@@ -54,8 +54,8 @@ function Step3Report() {
     const role = report.role || "Mock Interview";
     const mode = report.mode || "Technical";
 
-    const strengths = report.strengths || [];
-    const weaknesses = report.weaknesses || [];
+    const strengths = Array.isArray(report.strengths) ? report.strengths : [];
+    const weaknesses = Array.isArray(report.weaknesses) ? report.weaknesses : [];
 
     const getAvg = (key) => {
         if (report[key] !== undefined) return report[key];

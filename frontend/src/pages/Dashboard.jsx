@@ -16,6 +16,7 @@ function Dashboard() {
         const fetchInterviews = async () => {
             try {
                 const res = await axios.get(serverUrl +"/api/interview/user", { withCredentials: true });
+                setInterviews(Array.isArray(res.data) ? res.data : []);
                 setInterviews(res.data);
             } catch (error) {
                 console.error("Failed to fetch interviews", error);
