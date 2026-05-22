@@ -1,33 +1,28 @@
 import { motion } from 'motion/react'
 import { BsBarChart, BsFileEarmarkText } from "react-icons/bs"
 
-import evalImg from '../assets/ai-ans.png'
-import resumeImg from '../assets/resume.png'
-import pdfImg from '../assets/pdf.png'
-import analyticsImg from '../assets/history.png'
-
 const AiCapabilities = () => {
     const capabilities = [
         {
-            image: evalImg,
+            image: "/ai-ans.png",
             icon: <BsBarChart size={20} />,
             title: "AI Answer Evaluation",
             desc: "Scores communication, technical accuracy, and confidence."
         },
         {
-            image: resumeImg,
+            image: "/resume.png",
             icon: <BsFileEarmarkText size={20} />,
             title: "Resume Based Interview",
             desc: "Project-specific questions based on your uploaded resume."
         },
         {
-            image: pdfImg,
+            image: "/pdf.png",
             icon: <BsFileEarmarkText size={20} />,
             title: "Downloadable PDF Report",
             desc: "Detailed strengths, weaknesses, and improvement insights."
         },
         {
-            image: analyticsImg,
+            image: "/pdf.png", 
             icon: <BsBarChart size={20} />,
             title: "History & Analytics",
             desc: "Track your progress with performance graph analysis."
