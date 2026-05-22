@@ -10,8 +10,8 @@ dotenv.config()
 
 const app = express();
 app.use(cors({
-    origin:"https://mock-interviewer-ai-client.onrender.com" || "http://localhost:5173",
-    credentials: true
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  credentials: true
 }));
 
 app.use(express.json())
