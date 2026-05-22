@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,8 +9,10 @@ import AuthModal from './components/AuthModal.jsx'
 import InterviewPage from './pages/InterviewPage.jsx'
 import GlobalRouteListener from './components/GlobalRouteListener.jsx'
 import Navbar from './components/Navbar.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import Step3Report from './components/Step3Report.jsx'
 
-export const serverUrl = "http://localhost:8000"
+export const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -53,8 +55,9 @@ const App = () => {
       <Navbar/>
       <Routes>
         <Route path='/' element={<Home />} />
-
+        <Route path='/dashboard' element ={<Dashboard/>}/>
         <Route path='/interview' element={user ? <InterviewPage /> : <Navigate to="/" />} />
+        <Route path='/report/:id' element={user ? <Step3Report /> : <Navigate to="/" />} />      
       </Routes>
     </>
   )

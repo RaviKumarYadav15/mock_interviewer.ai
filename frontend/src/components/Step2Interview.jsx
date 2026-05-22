@@ -1,16 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'motion/react';
 import axios from 'axios';
-import { setStep, setReportData } from '../redux/interviewSlice';
+import { setReportData } from '../redux/interviewSlice';
 import { FaStopCircle, FaSpinner, FaVolumeUp, FaCheckCircle, FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import Timer from './Timer';
 
 import maleVideo from '../assets/videos/male-ai.mp4';
 import femaleVideo from '../assets/videos/female-ai.mp4';
+import { useNavigate } from 'react-router-dom';
+import { serverUrl } from '../App.jsx';
 
 function Step2Interview() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { interviewData } = useSelector((state) => state.interview);
     const { userData } = useSelector((state) => state.user);
     
@@ -18,7 +21,7 @@ function Step2Interview() {
     const interviewId = interviewData?.interviewId;
     const userName = userData?.name?.split(" ")[0] || "there"; 
 
-    // Initialize voice preference
+    // voice preference
     const [isMaleInterviewer] = useState(() => {
         if (interviewData?.voicePreference === "Male") return true;
         if (interviewData?.voicePreference === "Female") return false;
@@ -46,7 +49,6 @@ function Step2Interview() {
     const currentQ = questions[currentIndex] || {};
     const [timeLeft, setTimeLeft] = useState(currentQ.timeLimit || 60);
     
-    // DOM and state-tracking Refs
     const videoRef = useRef(null);
     const recognitionRef = useRef(null);
     const isMounted = useRef(true); 
@@ -224,7 +226,7 @@ function Step2Interview() {
         setIsSubmitting(true);
 
         try {
-            await axios.post("http://localhost:8000/api/interview/submit-answer", {
+            await axios.post(serverUrl + "/api/interview/submit-answer", {
                 interviewId, 
                 questionIndex: currentIndex, 
                 answer: currentAnswer, 
@@ -291,16 +293,12 @@ function Step2Interview() {
         setIsFinishing(true);
         
         try {
-            const res = await axios.post("http://localhost:8000/api/interview/finish", { interviewId }, { withCredentials: true });
-            if (!isMounted.current) return;
-            
+            const res = await axios.post(serverUrl  +"/api/interview/finish", { interviewId }, { withCredentials: true });            
             dispatch(setReportData(res.data));
-            dispatch(setStep(3));
-        } catch (err) {
-            if (isMounted.current) {
-                alert("Evaluation failed.");
-                setIsFinishing(false);
-            }
+            navigate(`/report/${interviewData.interviewId}`);
+        } catch (error) {
+            console.error("Failed to finish interview", error);
+            alert("Something went wrong while generating your report.");
         }
     };
 

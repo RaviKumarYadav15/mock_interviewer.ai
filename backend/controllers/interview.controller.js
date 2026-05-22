@@ -237,8 +237,6 @@ export const submitAnswer = async (req, res) => {
 
 const processAIGrading = async (interviewId, questionIndex, answer) => {
     try {
-        const interview = await Interview.findById(interviewId);
-        const question = interview.questions[questionIndex];
         const messages = [
             {
                 role: "system",
@@ -274,13 +272,13 @@ Return ONLY valid JSON:
         ];
 
         const aiResponse = await askAi(messages);
-        const cleanedResponse = aiResponse
-            .replace(/```json/gi, "")
-            .replace(/```/g, "")
-            .trim();
-
+        const cleanedResponse = aiResponse.replace(/```json/gi, "").replace(/```/g, "").trim();
         const parsed = JSON.parse(cleanedResponse);
 
+        const interview = await Interview.findById(interviewId);
+        if (!interview) return;
+
+        const question = interview.questions[questionIndex];
         question.communication = parsed.clarity || 0;
         question.confidence = parsed.structure || 0;
         question.correctness = parsed.correctness || 0;
@@ -315,13 +313,12 @@ export const finishInterview = async (req, res) => {
             totalCommunication += q.communication || 0;
             totalCorrectness += q.correctness || 0;
             
-            // Append each Q&A to transcript
             transcript += `Question ${index + 1}: ${q.question}\nCandidate Answer: ${q.answer || "No answer provided"}\n\n`;
         });
 
         const finalScore = totalScore / totalQuestions;
 
-        // 2 Ask AI to analyze transcript for Strengths & Weaknesses
+        // 2 Ask AI to analyze transcript for Strengths and Weaknesses
         const messages = [
             {
                 role: "system",
@@ -355,7 +352,7 @@ Use this exact structure:
         } catch (aiError) {
             console.error("AI Final Evaluation Failed, using defaults:", aiError);
             // Fallback so  app doesn't crash if AI fail
-            aiStrengths = ["Completed the interview assessment."];
+            aiStrengths = ["Completed interview assessment"];
             aiWeaknesses = ["Insufficient data to generate specific weaknesses."];
         }
 
@@ -375,7 +372,7 @@ Use this exact structure:
             correctness: Number((totalCorrectness / totalQuestions).toFixed(1)),
             strengths: aiStrengths,
             weaknesses: aiWeaknesses,
-            questionWiseScore: interview.questions.map((q) => ({
+            questions: interview.questions.map((q) => ({
                 question: q.question,
                 answer: q.answer,
                 score: q.score || 0,
@@ -389,5 +386,58 @@ Use this exact structure:
     } catch (error) {
         console.error("Finish Interview Error:", error);
         return res.status(500).json({ message: `Failed to finish Interview: ${error.message}` });
+    }
+};
+
+export const getUserInterviews = async (req, res) => {
+    try {
+        const userId = req.userId; 
+
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized. User ID missing." });
+        }
+
+        const interviews = await Interview.find({ userId: userId }).sort({ createdAt: -1 });
+
+        return res.status(200).json(interviews);
+    } catch (error) {
+        console.error("Fetch User Interviews Error:", error);
+        return res.status(500).json({ message: "Failed to fetch interviews" });
+    }
+};
+
+export const getInterviewById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const interview = await Interview.findById(id);
+        
+        if (!interview) {
+            return res.status(404).json({ message: "Interview not found" });
+        }
+        if (interview.userId.toString() !== req.userId.toString()) {
+            return res.status(403).json({ message: "Unauthorized access to this report." });
+        }
+        return res.status(200).json(interview);
+    } catch (error) {
+        console.error("Get Interview By ID Error:", error);
+        return res.status(500).json({ message: "Failed to fetch interview report" });
+    }
+};
+
+export const deleteInterview = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.userId;
+        const deletedInterview = await Interview.findOneAndDelete({ 
+            _id: id, 
+            userId: userId 
+        });
+        if (!deletedInterview) {
+            return res.status(404).json({ message: "Interview not found or unauthorized" });
+        }
+        return res.status(200).json({ message: "Interview successfully deleted" });
+    } catch (error) {
+        console.error("Delete Interview Error:", error);
+        return res.status(500).json({ message: "Failed to delete interview" });
     }
 };
