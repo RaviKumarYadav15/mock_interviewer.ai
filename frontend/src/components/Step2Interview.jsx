@@ -6,10 +6,15 @@ import { setReportData } from '../redux/interviewSlice';
 import { FaStopCircle, FaSpinner, FaVolumeUp, FaCheckCircle, FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import Timer from './Timer';
 
+<<<<<<< HEAD
 import maleVideo from '../assets/videos/male-ai.mp4';
 import femaleVideo from '../assets/videos/female-ai.mp4';
 import { useNavigate } from 'react-router-dom';
 import { serverUrl } from '../App.jsx';
+=======
+import maleVideo from '../assets/Videos/male-ai.mp4';
+import femaleVideo from '../assets/Videos/female-ai.mp4';
+>>>>>>> 3b2ac010058b2d416982767267ccee825b47759e
 
 function Step2Interview() {
     const dispatch = useDispatch();
