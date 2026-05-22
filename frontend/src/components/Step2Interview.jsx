@@ -5,9 +5,6 @@ import axios from 'axios';
 import { setReportData } from '../redux/interviewSlice';
 import { FaStopCircle, FaSpinner, FaVolumeUp, FaCheckCircle, FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import Timer from './Timer';
-
-import maleVideo from '../assets/Videos/male-ai.mp4';
-import femaleVideo from '../assets/Videos/female-ai.mp4';
 import { useNavigate } from 'react-router-dom';
 import { serverUrl } from '../App.jsx';
 
@@ -332,7 +329,7 @@ function Step2Interview() {
                         <motion.video 
                             layout
                             ref={videoRef}
-                            src={isMaleInterviewer ? maleVideo : femaleVideo}
+                            src={isMaleInterviewer ? "/Videos/male-ai.mp4" : "/Videos/female-ai.mp4"}
                             muted playsInline loop
                             className={`rounded-2xl object-cover w-full shadow-lg transition-opacity duration-300 ${isSpeaking ? 'ring-4 ring-emerald-500 opacity-100' : 'opacity-60 ring-1 ring-slate-700'}`}
                         />
