@@ -1,5 +1,6 @@
 import fs from "fs";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+// import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import pdfParse from "pdf-parse"
 import { askAi } from "../services/openRouter.service.js";
 import User from "../models/user.model.js";
 import Interview from "../models/interview.model.js";
@@ -13,19 +14,22 @@ export const analyzeResume = async (req, res) => {
 
     try {
         const fileBuffer = await fs.promises.readFile(filepath);
-        const uint8Array = new Uint8Array(fileBuffer);
+        // const uint8Array = new Uint8Array(fileBuffer);
+        // const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
 
-        const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
-
+        
         let resumeText = "";
 
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            const content = await page.getTextContent();
+        // for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        //     const page = await pdf.getPage(pageNum);
+        //     const content = await page.getTextContent();
 
-            const pageText = content.items.map(item => item.str).join(" ");
-            resumeText += pageText + "\n";
-        }
+        //     const pageText = content.items.map(item => item.str).join(" ");
+        //     resumeText += pageText + "\n";
+        // }
+
+        const pdfData = await pdfParse(fileBuffer);
+        let resumeText = pdfData.text;
 
         resumeText = resumeText
             .replace(/ +/g, " ")
