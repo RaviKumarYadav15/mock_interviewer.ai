@@ -1,4 +1,3 @@
-import fs from "fs";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import { askAi } from "../services/openRouter.service.js";
 import User from "../models/user.model.js";
@@ -12,8 +11,7 @@ export const analyzeResume = async (req, res) => {
     const filepath = req.file.path;
 
     try {
-        const fileBuffer = await fs.promises.readFile(filepath);
-        const uint8Array = new Uint8Array(fileBuffer);
+        const uint8Array = new Uint8Array(req.file.buffer);
 
         const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
 
@@ -69,10 +67,6 @@ Use this exact structure:
         console.error("Resume Analysis Error:", error);
         return res.status(500).json({ message: error.message || "Failed to analyze resume." });
 
-    } finally {
-        if (fs.existsSync(filepath)) {
-            fs.unlinkSync(filepath);
-        }
     }
 };
 
