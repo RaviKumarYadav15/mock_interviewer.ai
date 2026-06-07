@@ -18,7 +18,7 @@ export const analyzeResume = async (req, res) => {
         // const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
 
         
-        let resumeText = "";
+        // let resumeText = "";
 
         // for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         //     const page = await pdf.getPage(pageNum);
