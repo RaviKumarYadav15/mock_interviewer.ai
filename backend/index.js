@@ -17,15 +17,18 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 
+connectDb();
+
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 app.use("/api/interview", interviewRouter)
 
 const PORT = process.env.PORT || 6000
-// app.get("/",(req, res) => {
-//     return res.json({message: "Server Started"})
-// });
-app.listen(PORT, ()=>{
-    console.log(`Server running on port ${PORT}`)
-    connectDb()
-})
+
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, ()=>{
+        console.log(`Server running on port ${PORT}`)
+    })
+}
+
+export default app;
