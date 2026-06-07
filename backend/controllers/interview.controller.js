@@ -1,6 +1,10 @@
 import fs from "fs";
 // import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
-import pdfParse from "pdf-parse"
+// import pdfParse from "pdf-parse"
+
+import * as pdfParseModule from "pdf-parse";
+const pdfParse = pdfParseModule.default || pdfParseModule;
+
 import { askAi } from "../services/openRouter.service.js";
 import User from "../models/user.model.js";
 import Interview from "../models/interview.model.js";
