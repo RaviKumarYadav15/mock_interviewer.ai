@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion, AnimatePresence } from 'motion/react'
 import { BsRobot } from 'react-icons/bs'
-import { IoSparkles, IoClose } from 'react-icons/io5' // <-- IoClose imported here
+import { IoSparkles, IoClose } from 'react-icons/io5' 
 import { FcGoogle } from "react-icons/fc"
 import { signInWithPopup } from "firebase/auth"
 import { auth, provider } from "../utils/firebase.js"
