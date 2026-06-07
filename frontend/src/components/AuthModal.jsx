@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { motion, AnimatePresence } from 'motion/react'
 import { BsRobot } from 'react-icons/bs'
 import { IoSparkles, IoClose } from 'react-icons/io5' // <-- IoClose imported here
 import { FcGoogle } from "react-icons/fc"
-import { signInWithRedirect, getRedirectResult } from "firebase/auth"
+import { signInWithPopup } from "firebase/auth"
 import { auth, provider } from "../utils/firebase.js"
 import axios from "axios"
 import { serverUrl } from '../App.jsx'
@@ -15,41 +15,21 @@ const AuthModal = () => {
     const isOpen = useSelector((state) => state.user.isAuthModalOpen)
     const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        const checkRedirectResult = async () => {
-            try {
-                setIsLoading(true)
-                const response = await getRedirectResult(auth)
-                
-                if (response && response.user) {
-                    let user = response.user
-                    let name = user.displayName
-                    let email = user.email
-                    
-                    // Send it to backend
-                    const result = await axios.post(serverUrl + "/api/auth/google", {name, email}, {withCredentials: true})
-                    dispatch(setUserData(result.data))
-                    dispatch(setAuthModalOpen(false)) 
-                }
-            } catch (error) {
-                console.log("Firebase Redirect Error:", error)
-                dispatch(setUserData(null))
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        checkRedirectResult()
-    }, [dispatch])
-
     const handleGoogleAuth = async () => {
         if (isLoading) return
         setIsLoading(true)
         try {
-            // ✅ 3. Simply trigger the redirect. The useEffect above handles the rest later.
-            await signInWithRedirect(auth, provider)
+            const response = await signInWithPopup(auth, provider)
+            let user = response.user
+            let name = user.displayName
+            let email = user.email
+            const result = await axios.post(serverUrl + "/api/auth/google", {name, email}, {withCredentials: true})
+            dispatch(setUserData(result.data))
+            dispatch(setAuthModalOpen(false)) 
         } catch (error) {
             console.log(error)
+            dispatch(setUserData(null))
+        } finally {
             setIsLoading(false)
         }
     }
