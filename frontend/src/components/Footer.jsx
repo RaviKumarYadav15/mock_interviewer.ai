@@ -9,8 +9,8 @@ const Footer = () => {
             
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="bg-black text-white rounded-lg p-2">
-                <BsRobot size={20} />
+              <div className='bg-linear-to-r from-blue-400 to-blue-700 text-white rounded-lg p-2'>
+                  <BsRobot size={20} />
               </div>
               <h2 className="font-bold text-xl text-gray-800">Interviewer.ai</h2>
             </div>

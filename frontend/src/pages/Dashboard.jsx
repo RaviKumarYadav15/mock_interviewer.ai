@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setInterviewData, setReportData, setStep } from '../redux/interviewSlice';
 import { FaTrashAlt, FaFolderOpen, FaPlus } from 'react-icons/fa';
 import { serverUrl } from '../App.jsx';
+import { BsRobot } from 'react-icons/bs';
 
 function Dashboard() {
     const [interviews, setInterviews] = useState([]);
@@ -59,8 +60,10 @@ function Dashboard() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#f3f3f3] font-medium text-slate-500 cursor-wait">
                 <div className="animate-pulse flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 text-3xl bg-linear-to-b from-blue-400 to-blue-900  rounded-full animate-bounce"></div>
-                    <p className='text-3xl'>loading your dashboard...</p>
+                    <div className='bg-linear-to-r from-blue-400 to-blue-700 text-white rounded-lg p-2'>
+                        <BsRobot size={20} />
+                    </div>
+                    <p className='text-3xl'>loading dashboard...</p>
                 </div>
             </div>
         );

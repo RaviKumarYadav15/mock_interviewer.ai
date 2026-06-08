@@ -36,6 +36,7 @@ const Navbar = () => {
     }, [])
 
       const handleCredit = () => {
+          setShowCreditPopUp(false);
         if (!userData) dispatch(setAuthModalOpen(true))
         else navigate('/pricing')
     }
@@ -110,7 +111,7 @@ const Navbar = () => {
 
                                 <button
                                     onClick={handleCredit}
-                                    className='w-full bg-linear-to-br from-yellow-100 to-yellow-700 text-white text-sm py-2 rounded-lg hover:bg-gray-800 transition cursor-p'
+                                    className='w-full bg-linear-to-br from-yellow-100 to-yellow-700 text-white text-sm py-2 rounded-lg hover:bg-gray-800 transition cursor-pointer'
                                 >
                                     Buy More Credits
                                 </button>

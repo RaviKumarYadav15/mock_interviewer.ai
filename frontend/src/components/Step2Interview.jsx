@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'motion/react';
 import axios from 'axios';
-import { setReportData } from '../redux/interviewSlice';
+import { resetInterview, setReportData } from '../redux/interviewSlice';
 import { FaStopCircle, FaSpinner, FaVolumeUp, FaCheckCircle, FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import Timer from './Timer';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ function Step2Interview() {
     const navigate = useNavigate();
     const { interviewData } = useSelector((state) => state.interview);
     const { userData } = useSelector((state) => state.user);
-    
+   
     const questions = interviewData?.questions || [];
     const interviewId = interviewData?.interviewId;
     const userName = userData?.name?.split(" ")[0] || "there"; 
@@ -22,7 +22,6 @@ function Step2Interview() {
     const [isMaleInterviewer] = useState(() => {
         if (interviewData?.voicePreference === "Male") return true;
         if (interviewData?.voicePreference === "Female") return false;
-        return Math.random() > 0.5; 
     });
     
     // Find first unanswered question to support resuming
@@ -123,7 +122,7 @@ function Step2Interview() {
             }
             
             await speakText(`Hi ${userName}, it's great to meet you today. I hope you're feeling confident and ready.`);
-            await new Promise(r => setTimeout(r, 500)); 
+            await new Promise(r => setTimeout(r, 100)); 
             await speakText("I'll ask you a few questions. Just answer confidently, and take your time. Let's begin.");
             
             if (isMounted.current) setIsIntro(false);
@@ -133,9 +132,19 @@ function Step2Interview() {
 
     // Handle component unmount and browser close events
     useEffect(() => {
+
+        if (sessionStorage.getItem('interview_interrupted') === 'true') {
+            sessionStorage.removeItem('interview_interrupted'); // Clear the sticky note
+            window.speechSynthesis.cancel();
+            dispatch(resetInterview()); 
+            navigate('/');
+            return;
+        }
+
         isMounted.current = true;
 
         const handleBeforeUnload = (e) => {
+            sessionStorage.setItem('interview_interrupted', 'true');
             e.preventDefault();
             e.returnValue = "You have an ongoing interview. If you leave, your progress will be lost.";
         };
@@ -318,12 +327,15 @@ function Step2Interview() {
 
     return (
         <div className="min-h-screen bg-[#f3f3f3] flex items-center justify-center p-4 relative">
-            <div className={`w-full max-w-6xl transition-all duration-700 bg-white rounded-3xl shadow-xl flex flex-col lg:flex-row overflow-hidden border border-slate-200 ${isIntro ? 'min-h-[50vh] justify-center items-center p-12' : 'min-h-[85vh]'}`}>
-                
+            <motion.div 
+                layout 
+                transition={{ type: 'spring', stiffness: 90, damping: 20 }}
+                className="w-full max-w-6xl bg-white rounded-3xl shadow-xl flex flex-col lg:flex-row overflow-hidden border border-slate-200 min-h-[80vh]"
+            >                
                 <motion.div 
                     layout 
-                    transition={{ type: 'spring', stiffness: 80, damping: 15 }}
-                    className={`flex flex-col items-center justify-center gap-6 transition-all duration-700 ${isIntro ? 'w-full max-w-lg p-4' : 'w-full lg:w-[40%] bg-slate-900 p-8 gap-8'}`}
+                    transition={{ type: 'spring', stiffness: 90, damping: 20 }}
+                    className={`flex flex-col items-center justify-center gap-6 transition-colors duration-500 ${isIntro ? 'w-full p-8 lg:p-12' : 'w-full lg:w-[40%] bg-slate-900 p-8 gap-8'}`}
                 >
                     <div className={`relative transition-all duration-500 ${isIntro ? 'w-full max-w-md scale-105' : 'w-full max-w-sm'}`}>
                         <motion.video 
@@ -340,8 +352,7 @@ function Step2Interview() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: 10 }}
-                                    className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md text-white p-3 rounded-xl text-sm text-center border border-white/10 shadow-xl z-10 font-medium"
-                                >
+                                    className="relative mt-4 w-full md:absolute md:bottom-4 md:left-4 md:right-4 md:w-auto md:mt-0 bg-black/70 backdrop-blur-md text-white p-3 rounded-xl text-sm text-center border border-white/10 shadow-xl z-10 font-medium"                                >
                                     {subtitle}
                                 </motion.div>
                             )}
@@ -405,7 +416,7 @@ function Step2Interview() {
                                         onChange={(e) => setCurrentAnswer(e.target.value)}
                                         disabled={isSubmitting || isTransitioning}
                                         placeholder={isListening ? "Listening... Speak now!" : "Type your detailed answer or click the mic to speak..."}
-                                        className={`flex-1 w-full bg-white p-6 rounded-2xl outline-none border transition-all resize-none text-lg min-h-[200px] shadow-sm disabled:bg-slate-50 ${isListening ? 'border-red-400 ring-2 ring-red-400/20' : 'border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500'}`}
+                                        className={`flex-1 w-full bg-white p-6 rounded-2xl outline-none border transition-all resize-none text-lg min-h-50 shadow-sm disabled:bg-slate-50 ${isListening ? 'border-red-400 ring-2 ring-red-400/20' : 'border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500'}`}
                                     />
                                     {isListening && (
                                         <span className="absolute top-4 right-4 flex h-3 w-3">
@@ -437,7 +448,7 @@ function Step2Interview() {
                         </div>
                     </motion.div>
                 )}
-            </div>
+            </motion.div>
         </div>
     );
 }
