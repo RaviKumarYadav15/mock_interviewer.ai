@@ -106,7 +106,8 @@ const handleStart = async (e) => {
                 projects, 
                 skills,
                 interviewId: result.data.interviewId,
-                questions: result.data.questions 
+                questions: result.data.questions ,
+                voicePreference: result.data.voicePreference 
             }));
             
             // Now move to Step 2

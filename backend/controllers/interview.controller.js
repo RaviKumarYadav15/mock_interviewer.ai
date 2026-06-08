@@ -72,11 +72,16 @@ Use this exact structure:
 
 export const generateQuestion = async (req, res) => {
     try {
-        let { role, experience, mode, resumeText, projects, skills } = req.body;
+        let { role, experience, mode, resumeText, projects, skills,voicePreference } = req.body;
 
         role = role?.trim();
         experience = experience?.trim();
         mode = mode?.trim();
+
+        voicePreference = voicePreference?.trim();
+        if (!voicePreference || voicePreference === "Random") {
+            voicePreference = Math.random() > 0.5 ? "Male" : "Female";
+        }
 
         if (!role || !experience || !mode) {
             return res.status(400).json({ message: "Role, Experience and Mode are required." });
@@ -155,6 +160,7 @@ and role-specific scenarios."`
             userId: user._id,
             role,
             experience,
+            voicePreference,
             mode,
             resumeText: safeResume,
             questions: questionsArray.map((q, index) => ({
@@ -167,13 +173,14 @@ and role-specific scenarios."`
         const updatedUser = await User.findByIdAndUpdate(
             user._id,
             { $inc: { credits: -50 } },
-            { new: true }
+            { returnDocument: 'after' }
         );
 
         return res.json({
             interviewId: interview._id,
-            creditsLeft: user.credits,
+            creditsLeft: updatedUser.credits,
             userName: updatedUser.name,
+            voicePreference: interview.voicePreference,
             questions: interview.questions
         });
 

@@ -31,6 +31,11 @@ const interviewSchema = new mongoose.Schema({
         enum: ["HR", "Technical"],
         required: true
     },
+    voicePreference: {
+        type: String,
+        enum: ["Male", "Female"],
+        default: "Male"
+    },
     resumeText: {
         type: String
     },
