@@ -70,8 +70,7 @@ function Step2Interview() {
             
             window.speechSynthesis.cancel(); 
             
-            const humanText = " ... " + text.replace(/,/g, " ... ").replace(/\./g, " ... ");
-            const utterance = new SpeechSynthesisUtterance(humanText);
+            const utterance = new SpeechSynthesisUtterance(text);
             
             let matchingVoice = systemVoices.find(v => 
                 !isMaleInterviewer 
