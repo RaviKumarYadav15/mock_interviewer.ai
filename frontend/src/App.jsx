@@ -16,6 +16,30 @@ import Pricing from './components/Pricing.jsx'
 
 export const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:8000";
 
+const ProtectedRoute = ({ user, isCheckingAuth, children }) => {
+  if (isCheckingAuth) {
+    return (
+      <div className="w-full min-h-[80vh] flex flex-col items-center justify-center bg-gray-50">
+        <div className='animate-bounce mb-4 bg-linear-to-r from-blue-400 to-blue-700 text-white rounded-lg p-2'>
+          <BsRobot className="text-white-600 text-5xl" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          Interviewer.ai
+        </h2>
+        <p className="text-gray-500 font-medium animate-pulse">
+          Loading Interviewer.ai...
+        </p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.userData);
@@ -40,26 +64,6 @@ const App = () => {
     getUser()
   }, [dispatch])
 
-  if (isCheckingAuth) {
-    return (
-      <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        
-        <div className='animate-bounce mb-4 bg-linear-to-r from-blue-400 to-blue-700 text-white rounded-lg p-2'>
-          <BsRobot className="text-white-600 text-5xl" />
-        </div>
-
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Interviewer.ai
-        </h2>
-
-        <p className="text-gray-500 font-medium animate-pulse">
-          Loading Interviewer.ai...
-        </p>
-
-      </div>
-    );
-  }
-
   return (
     <>
       <GlobalRouteListener/>
@@ -67,9 +71,21 @@ const App = () => {
       <Navbar/>
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/dashboard' element ={<Dashboard/>}/>
-        <Route path='/interview' element={user ? <InterviewPage /> : <Navigate to="/" />} />
-        <Route path='/report/:id' element={user ? <Step3Report /> : <Navigate to="/" />} />      
+        <Route path='/dashboard' element ={
+          <ProtectedRoute user={user} isCheckingAuth={isCheckingAuth}>
+            <Dashboard/>
+          </ProtectedRoute>
+        }/>
+        <Route path='/interview' element={
+          <ProtectedRoute user={user} isCheckingAuth={isCheckingAuth}>
+            <InterviewPage />
+          </ProtectedRoute>
+        } />
+        <Route path='/report/:id' element={
+          <ProtectedRoute user={user} isCheckingAuth={isCheckingAuth}>
+            <Step3Report />
+          </ProtectedRoute>
+        } />      
         <Route path='/pricing' element={<Pricing />} />
       </Routes>
     </>
