@@ -20,8 +20,8 @@ function Step2Interview() {
 
     // voice preference
     const [isMaleInterviewer] = useState(() => {
-        if (interviewData?.voicePreference === "Male") return true;
         if (interviewData?.voicePreference === "Female") return false;
+        return true;
     });
     
     // Find first unanswered question to support resuming
@@ -74,8 +74,8 @@ function Step2Interview() {
             
             let matchingVoice = systemVoices.find(v => 
                 !isMaleInterviewer 
-                    ? v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("samantha")
-                    : v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("david") || v.name.toLowerCase().includes("google us english")
+                    ? v.name.toLowerCase().includes("female") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("samantha") || v.name.toLowerCase().includes("google us english")
+                    : v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("david") || v.name.toLowerCase().includes("google uk english male")
             );
 
             if (matchingVoice) utterance.voice = matchingVoice;
@@ -341,7 +341,7 @@ function Step2Interview() {
                             layout
                             ref={videoRef}
                             src={isMaleInterviewer ? "/Videos/male-ai.mp4" : "/Videos/female-ai.mp4"}
-                            muted playsInline loop
+                            muted playsInline loop autoPlay preload="auto"
                             className={`rounded-2xl object-cover w-full shadow-lg transition-opacity duration-300 ${isSpeaking ? 'ring-4 ring-emerald-500 opacity-100' : 'opacity-60 ring-1 ring-slate-700'}`}
                         />
                         
