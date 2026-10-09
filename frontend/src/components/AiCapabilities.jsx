@@ -4,24 +4,24 @@ const AiCapabilities = () => {
     const capabilities = [
         {
             title: "AI Answer Evaluation",
-            desc: "Scores communication, technical accuracy, and confidence."
+            desc: "Scores communication, technical accuracy, and confidence"
         },
         {
             title: "Resume Based Interview",
-            desc: "Project-specific questions based on your uploaded resume."
+            desc: "Project-specific questions based on your uploaded resume"
         },
         {
             title: "Downloadable PDF Report",
-            desc: "Detailed strengths, weaknesses, and improvement insights."
+            desc: "Detailed strengths, weaknesses, and improvement insights"
         },
         {
             title: "History & Analytics",
-            desc: "Track your progress with performance graph analysis."
+            desc: "Track your progress with performance graph analysis"
         }
     ];
 
     return (
-        <div className="w-full max-w-5xl mx-auto mb-32 px-4 md:px-0">
+        <div className="w-full max-w-6xl mx-auto mb-32 px-4 md:px-6">
             <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -33,54 +33,32 @@ const AiCapabilities = () => {
                 <span className="text-blue-600">Capabilities</span>
             </motion.h2>
 
-            <div className="relative max-w-4xl mx-auto">
-                {/* Vertical Line */}
-                <div className="absolute left-[23px] md:left-1/2 top-2 bottom-2 w-0.5 bg-blue-200 transform md:-translate-x-1/2 z-0"></div>
-                
-                <div className="space-y-12 md:space-y-16">
-                    {capabilities.map((item, index) => {
-                        const isEven = index % 2 === 0;
-                        return (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4, delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                className="relative flex items-center w-full z-10"
-                            >
-                                {/* Center Dot */}
-                                <div className="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-600 rounded-full ring-4 ring-[#f3f3f3] shadow-sm"></div>
+            <div className="relative">
+                {/* Horizontal Connecting Line (Desktop only) */}
+                <div className="hidden md:block absolute top-[23px] left-[12.5%] right-[12.5%] h-[2px] bg-blue-200 z-0"></div>
 
-                                {/* Mobile Layout: Content always on the right */}
-                                <div className="md:hidden w-full pl-14">
-                                    <h3 className="text-xl font-bold text-gray-800 mb-2">{item.title}</h3>
-                                    <p className="text-gray-500">{item.desc}</p>
-                                </div>
+                <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-6 relative z-10">
+                    {capabilities.map((item, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: index * 0.1 }}
+                            viewport={{ once: true }}
+                            className="flex flex-col items-center flex-1"
+                        >
+                            {/* Number Circle */}
+                            <div className="w-12 h-12 bg-white rounded-full border-[3px] border-blue-600 text-blue-600 flex items-center justify-center font-bold text-lg shadow-sm mb-6 z-10 relative">
+                                {index + 1}
+                            </div>
 
-                                {/* Desktop Layout: Alternating */}
-                                <div className="hidden md:flex w-full">
-                                    {isEven ? (
-                                        <>
-                                            <div className="w-1/2 pr-12 text-right">
-                                                <h3 className="text-xl font-bold text-gray-800 mb-2">{item.title}</h3>
-                                                <p className="text-gray-500">{item.desc}</p>
-                                            </div>
-                                            <div className="w-1/2"></div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="w-1/2"></div>
-                                            <div className="w-1/2 pl-12 text-left">
-                                                <h3 className="text-xl font-bold text-gray-800 mb-2">{item.title}</h3>
-                                                <p className="text-gray-500">{item.desc}</p>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            </motion.div>
-                        );
-                    })}
+                            {/* Content Card */}
+                            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-50 text-center w-full h-full flex flex-col justify-start">
+                                <h3 className="text-lg font-bold text-gray-800 mb-3">{item.title}</h3>
+                                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
             </div>
             
