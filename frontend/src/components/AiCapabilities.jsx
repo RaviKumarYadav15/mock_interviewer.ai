@@ -54,8 +54,8 @@ const AiCapabilities = () => {
 
                             {/* Content Card */}
                             <div className="bg-white rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-50 text-center w-full h-full flex flex-col justify-start">
-                                <h3 className="text-lg font-bold text-gray-800 mb-3">{item.title}</h3>
-                                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                                <h3 className="font-semibold mb-3 text-lg text-gray-800 leading-tight">{item.title}</h3>
+                                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                             </div>
                         </motion.div>
                     ))}

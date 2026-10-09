@@ -7,19 +7,19 @@ const Process = () => {
             icon: <BsRobot size={24} />,
             step: "STEP 1",
             title: "Role & Experience Selection",
-            desc: "AI adjusts difficulty based on selected job role."
+            desc: "AI adjusts difficulty based on selected job role"
         },
         {
             icon: <BsMic size={24} />,
             step: "STEP 2",
             title: "Smart Voice Interview",
-            desc: "Dynamic follow-up questions based on your answers."
+            desc: "Dynamic follow-up questions based on your answers"
         },
         {
             icon: <BsClock size={24} />,
             step: "STEP 3",
             title: "Timer Based Simulation",
-            desc: "Real interview pressure with time tracking."
+            desc: "Real interview pressure with time tracking"
         }
     ];
 
