@@ -32,12 +32,7 @@ const Home = () => {
   return (
     <div className='min-h-screen bg-[#f3f3f3] flex flex-col overflow-x-hidden'>
       <div className='flex-1 px-6 pt-20'>
-        <div className='flex justify-center mb-8'>
-          <div className='bg-linear-to-b from-blue-50 to-blue-500 text-sm px-4 py-2 rounded-full flex items-center gap-2'>
-            <HiSparkles size={20} className='text-blue-600' />
-            <span className='font-medium text-gray-700'>AI Powered Smart Interview Platform</span>
-          </div>
-        </div>
+
 
         <div className='text-center mb-20'>
           <motion.h1
